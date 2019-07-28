@@ -14,13 +14,21 @@ So I got this stupid box, which is a Linux box with a touch screen, 220V power i
 You’d figure that with an Ethernet port, you could log in to it and get some web page for looking at statistics, but no. You get 404 errors. It’s got an SSH port open, but I wasn’t able to figure out the credentials. So, useless, but after some digging, and then backing up the device to a thumb drive, I discovered that it made a big old tarball with a directoy structure that started with root. So there was that.  It started with root>Gateway>data>0>day.dat and a bunch of other files. And it just so happened to perfectly mirror the structure of the onboard web server. So putting in http://10.41.61.21/data/0/min.dat would download a file (on your own LAN of course) of minute-by-minute data that was literally every minute since midnight of that day. It looked like this, human readable and space delimited. And all day, it just appends more data to the end of the file, and overwrites every day at midnight. 
 
 2019-07-07 12:49 0.258998 27.59 239.4 0.53 60.18 43 0.588 1 2500 0
+
 2019-07-07 12:50 0.304852 27.7 239.9 0.96 60.17 43 0.593 1 2500 0
+
 2019-07-07 12:51 0.299407 27.14 239 0.52 60.18 43 0.598 1 2500 0
+
 2019-07-07 12:52 0.249534 27.43 238.5 0.49 60.19 43 0.602 1 2500 0
+
 2019-07-07 12:53 0.230488 27.35 238.1 0.47 60.2 43 0.605 1 2500 0
+
 2019-07-07 12:54 0.219258 27.19 238.5 0.46 60.2 43 0.608 1 2500 0
+
 2019-07-07 12:55 0.213326 26.9 237.6 0.44 60.18 44 0.612 1 2500 0
+
 2019-07-07 12:56 0.205836 27.26 237.2 0.44 60.2 44 0.616 1 2500 0
+
 
 So there’s Date,Time, kW, MPPT/DC voltage, AC voltage, AC amps, AC frequency, temperature, total kWh, RSSI maybe, mystery and error code. 
 

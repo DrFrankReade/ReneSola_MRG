@@ -1,0 +1,183 @@
+## This is a RESTFUL and template implemntation of a Renesola MRG read 
+# THANK GOD that the server supports http range headers, which means  that you don't have to fetch
+# the entire file, which is good, because it gets longer and longer every minute, literally
+# and anotehr weird, nice thing is that this is a rare use case for the NEGATIVE range header which
+# only reads back the LAST x bytes of the file, and in our case, the Renesola MRG just appends data to the
+# same file, so the latest data is always at the end. 
+
+# So here's the gist of what's going on in this Jinja2 template - We fetch the relevant min.dat, but only the last 100 bytes
+# and then split it the first time to just contain the last line with the /n char. From there, we split it a second time by spaces
+#  because the file is space delimited, in to 9 floating point numbers that go in to sensors like a normal REST sensor.
+# Select your inverter module by changing the folder - /data/X/min.dat where 0 for X is the system total, and 1,2,3 etc are the
+# various inverters that you set up on the MRG's actual interface
+
+# Now I'll admit I could have done this a bit more..clean maybe. There's probably a neat way to increment the sensor
+# names and whatever, but I'm not an expert in this stuff, so I just made a BIG template.
+
+
+# It will probably be awful at first. 
+
+sensor:
+  - platform: rest
+    name: Renesola MRG
+    scan_interval: 60
+    # Obviously chage the IP to whatever your local IP is for your MRG. Suggest you make yours static and give it a bad gateway
+    # to keep it from talking to any creepy Chinese servers or engaging in other tomfoolery. 
+    resource: http://10.44.63.28/data/0/min.dat
+    headers:
+      range: bytes=-100
+    value_template: "{{ value  }}"
+  - platform: template
+    sensors:
+# No need to log the date and time - Homeassistant does this. It will just grind your disk. 
+#      renesola_date:
+#        friendly_name: 'Gateway Date'
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[0]|float}}"
+#      renesola_time:
+#        friendly_name: 'Gateway Time'
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[1]|float}}"
+      renesola_power:
+        friendly_name: 'Solar Kilowatts'
+        unit_of_measurement: 'kW'
+        device_class: power
+        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[2]|float}}"
+# And we can agregate this data later, and who even knows if it's accurate, so lets not bother breaking it out. 
+#      renesola_vdc:
+#        unit_of_measurement: 'VDC'
+#        device_class: power
+#        friendly_name: 'DC Panel Voltage'
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[3]|float}}"
+#      renesola_vac:
+#        friendly_name: 'AC Line Voltage'
+#        unit_of_measurement: 'VAC'
+#        device_class: power
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[4]|float}}"
+#      renesola_ac_current:
+#        friendly_name: 'AC Output Amps'
+#        unit_of_measurement: 'Amps'
+#        device_class: power
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[5]|float}}"
+#      renesola_hz:
+#        friendly_name: 'AC Frequency'
+#        device_class: power
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[6]|float}}"
+#      renesola_module_temp:
+#        device_class: temperature
+#        unit_of_measurement: '°C'
+#        friendly_name: 'Inverter Temperature'
+#        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[7]|float}}"
+      renesola_total_energy:
+        device_class: power
+        friendly_name: 'Solar Total kWh Today'
+        unit_of_measurement: 'kWh'
+        value_template: "{{states('sensor.renesola_mrg').split('\n')[1].split(' ')[8]|float}}"
+
+
+  - platform: rest
+# Change that folder from 0 to 1 or whatever to start looking at individual modules 
+# also, change your names and sensor names. This will be tiring in big installations. 
+    name: Renesola Module 1
+    scan_interval: 60
+    resource: http://10.44.63.28/data/1/min.dat
+    headers:
+      range: bytes=-100
+    value_template: "{{ value  }}"
+  - platform: template
+    sensors:
+
+      module_1_renesola_power:
+        friendly_name: 'Solar Kilowatts'
+        unit_of_measurement: 'kW'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_1').split('\n')[1].split(' ')[2]|float}}"
+      module_1_renesola_vdc:
+        unit_of_measurement: 'VDC'
+        device_class: power
+        friendly_name: 'DC Panel Voltage'
+        value_template: "{{states('sensor.renesola_module_1').split('\n')[1].split(' ')[3]|float}}"
+      module_1_renesola_vac:
+        friendly_name: 'AC Line Voltage'
+        unit_of_measurement: 'VAC'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_1').split('\n')[1].split(' ')[4]|float}}"
+      module_1_renesola_ac_current:
+        friendly_name: 'AC Output Amps'
+        unit_of_measurement: 'Amps'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_1').split('\n')[1].split(' ')[5]|float}}"
+      module_1_renesola_hz:
+        friendly_name: 'AC Frequency'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_1').split('\n')[1].split(' ')[6]|float}}"
+      module_1_renesola_module_temp:
+        device_class: temperature
+        unit_of_measurement: '°C'
+        friendly_name: 'Inverter Temperature'
+# Here we're doing something goofy - We're NOT commiting the temperature reading if the value drops 
+# to something bonkers like -100, which is what it does when the inverters disconnect at night.
+# again, no need to grind the SD card, and -100 values make your charts scale to something ugly. 
+        value_template: >-
+          {% set magic = states('sensor.renesola_module_1').split('\n')[1].split(' ')[7] %}
+          {% if magic|float > -50 %}
+          {{ magic }}
+          {% else %}
+           ''
+          {% endif %}
+      module_1_renesola_total_energy:
+        device_class: power
+        friendly_name: 'Solar Total kWh Today'
+        unit_of_measurement: 'kWh'
+        value_template: "{{states('sensor.renesola_module_1').split('\n')[1].split(' ')[8]|float}}"
+# And increment everything again for the next inverter
+  - platform: rest
+    name: Renesola Module 2
+    scan_interval: 60
+    resource: http://10.44.63.28/data/2/min.dat
+    headers:
+      range: bytes=-100
+    value_template: "{{ value  }}"
+  - platform: template
+    sensors:
+
+      module_2_renesola_power:
+        friendly_name: 'Solar Kilowatts'
+        unit_of_measurement: 'kW'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_2').split('\n')[1].split(' ')[2]|float}}"
+      module_2_renesola_vdc:
+        unit_of_measurement: 'VDC'
+        device_class: power
+        friendly_name: 'DC Panel Voltage'
+        value_template: "{{states('sensor.renesola_module_2').split('\n')[1].split(' ')[3]|float}}"
+      module_2_renesola_vac:
+        friendly_name: 'AC Line Voltage'
+        unit_of_measurement: 'VAC'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_2').split('\n')[1].split(' ')[4]|float}}"
+      module_2_renesola_ac_current:
+        friendly_name: 'AC Output Amps'
+        unit_of_measurement: 'Amps'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_2').split('\n')[1].split(' ')[5]|float}}"
+      module_2_renesola_hz:
+        friendly_name: 'AC Frequency'
+        device_class: power
+        value_template: "{{states('sensor.renesola_module_2').split('\n')[1].split(' ')[6]|float}}"
+      module_2_renesola_module_temp:
+        device_class: temperature
+        unit_of_measurement: '°C'
+        friendly_name: 'Inverter Temperature'
+        value_template: >-
+          {% set magic = states('sensor.renesola_module_2').split('\n')[1].split(' ')[7] %}
+          {% if magic|float > -50 %}
+          {{ magic }}
+          {% else %}
+           ''
+          {% endif %}
+      module_2_renesola_total_energy:
+        device_class: power
+        friendly_name: 'Solar Total kWh Today'
+        unit_of_measurement: 'kWh'
+        value_template: "{{states('sensor.renesola_module_2').split('\n')[1].split(' ')[8]|float}}"
+        
+# And put more inverters HERE. and so on.

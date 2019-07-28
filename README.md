@@ -1,9 +1,11 @@
 # ReneSola_MRG
-Access the ReneSola MRG device to monitor ReneSola Micro Replus Inverters in detail
+Access the ReneSola MRG device to monitor ReneSola Micro Replus Inverters in detail, which is important. 
 
 ![the actual gateway](MicroReplusMRG.jpg)
 
-The company ReneSola is pretty much out of bussiness. See their NYSE:SOL listing if you need proof, but there's a lot of hardware out there, and a lot of new-in-box hardware available on the liquidation market. Utsilizing this hardware keeps it out of a landfill and puts more solar on the grid.
+The company ReneSola is pretty much out of bussiness. See their NYSE:SOL listing if you need proof, but there's a lot of hardware out there, and a lot of new-in-box hardware available on the liquidation market. Utsilizing this hardware keeps it out of a landfill and puts more solar on the grid and keeps a lump of coal somewhere from being burned. This is important. 
+
+The MRG device monitors the over-all system totals, but does nothing to address output and conditons of the individual solar inverters, so the reality is that nobody knows which inverters are broken, and some WILL blow up,  what panels are dirty, who's overheating, or any module level data whatsoever. This USED to be available when Renesola had their cloud interface up, but no more. Everybody's been hung out to dry. UNTIL NOW!!
 
 The purpose of this document is to, as best as possible, document access methods for the device, which, are so far limited to local HTTP access via a lightHTTPd server running on port 80. THERE IS NO BEAUTIFUL WEB UI. NONE. It's plain text files in a folder structure, which is the same as what's in this repository. 
 
@@ -76,4 +78,8 @@ As for these moduleX.dat files, I can’t really say. It’s linux time, followe
 
 ![Homeassistant is working](hassworks.png)
 
-Using my really unsighyly REST sensor and template, you can get real honest sensor readings in to Homeassistant. Even ask my mom!
+Using my really unsighyly REST sensor and template, you can get real honest sensor readings in to Homeassistant. Even ask my mom! 
+
+# To Do:
+
+Look in to a system to better auto-increment the individual naming of inverter modules and sensors. Because each MRG can support 255 panels, so that YAML file would be a BEAST. 

@@ -74,6 +74,6 @@ which is linux time, first line is the system total, followed by each panel on e
 
 As for these moduleX.dat files, I can’t really say. It’s linux time, followed by zeros, and terminating with some unprintable characters that I haven’t figured out. The backup I took was from the first day of operation, so maybe this isn’t fleshed out yet, and will probably look a lot different a few days in.  Oddly, I can’t seem to make another backup, so I’m lucky to have picked this one up.
 
-![Homeassistant is working](hassworks.jpg)
+![Homeassistant is working](hassworks.png)
 
 Using my really unsighyly REST sensor and template, you can get real honest sensor readings in to Homeassistant. Even ask my mom!

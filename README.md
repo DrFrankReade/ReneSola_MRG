@@ -1,13 +1,15 @@
 # ReneSola_MRG
 Access the ReneSola MRG device to monitor ReneSola Micro Replus Inverters in detail
 
+![the actual gateway](MicroReplusMRG.jpg)
+
 The company ReneSola is pretty much out of bussiness. See their NYSE:SOL listing if you need proof, but there's a lot of hardware out there, and a lot of new-in-box hardware available on the liquidation market. Utsilizing this hardware keeps it out of a landfill and puts more solar on the grid.
 
 The purpose of this document is to, as best as possible, document access methods for the device, which, are so far limited to local HTTP access via a lightHTTPd server running on port 80. THERE IS NO BEAUTIFUL WEB UI. NONE. It's plain text files in a folder structure, which is the same as what's in this repository. 
 
 So here comes the fun part. I wanted better performance monitoring, and some liquidator across town had a bundle of these monitoring boxes called the “ReneSola MRG Micro Replus Gateway ” that would talk to each inverter with “Power Line Communication” like the old X-10 devices, it basically superimposes data during the zero crossing (when the sine wave of your AC power is zero volts) and anything plugged in can talk during those very brief times. There are lots of different protocols for this, and Renesola does NOT use any of them. They use some rando chip called the Miartech MI200E, which appears to only be available on alibaba. Datasheets (in Chinese) can be found with a fair degree of hunting, but they’re probably of little use. 
 
-image
+![the actual gateway](PLCPHYChip.jpg)
 
 So I got this stupid box, which is a Linux box with a touch screen, 220V power input, USB and ethernet ports,  that tries to connect to “The Cloud” which is some server in China that’s only referred to by it’s IP address, and it’s long gone. You can’t change it, and it’s pretty well locked down, despite the USB port and old versions of lightHTTPd running on it. I’ll post the results from a nmap session at some point. BUT, I don’t feel entirely comfortable with it on my network, but it’s not doing anything weird, plus I gave it a bad gateway address, so it’s probably going to have to work pretty hard to get on the internet.  
 
@@ -33,7 +35,7 @@ I also managed to get it hooked up to Homeassistant as a REST sensor, with HTTP 
 
 Now here’s the thing about Renesola. They’re GONE. That 20 year warranty? Gone with them. Check out their listing on the NYSE. So long. 
 
-image
+![Penny Stocks!!](graphchart.png)
 
 And what I’m writing here is literally the only data out there that you’ll ever see on these devices unless some brave ex-Renesola IT soul should come forward with better information and keep these things useful for a few more years. 
 
@@ -71,3 +73,7 @@ dayEnergy is formatted like so:
 which is linux time, first line is the system total, followed by each panel on each line. Energy is the same data, but without timestamps. 
 
 As for these moduleX.dat files, I can’t really say. It’s linux time, followed by zeros, and terminating with some unprintable characters that I haven’t figured out. The backup I took was from the first day of operation, so maybe this isn’t fleshed out yet, and will probably look a lot different a few days in.  Oddly, I can’t seem to make another backup, so I’m lucky to have picked this one up.
+
+![Homeassistant is working](hassworks.jpg)
+
+Using my really unsighyly REST sensor and template, you can get real honest sensor readings in to Homeassistant. Even ask my mom!

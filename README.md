@@ -106,6 +106,21 @@ mtd4: 10000000 00020000 "nand"
 ```
 I've imaged all of these partitions, and I'm trying to copy everything out before I really start digging. The last thing I want to do is break this thing. 
 
+# MAJOR EUREKA MOMENT! ENABLE THE WEB INTERFACE!:
+This is huge! So the Renesola MRG has a web interface, but somebody BROKE it before shipping it. Thanks for nothing guys! Bue here's how you fix it...
+
+SSH in to the box: (Do this from Linux or some other SSH program, Putty, etc.)
+user name `root`
+password `nep`
+It may give you some guff about a key, or a key not matching, just connect anyways. 
+Your goal here, now, is to rename a file in the Gateway folder called `index.bak` to `index.html` and that's it. So issue this command...to make a copy of said file, because it's small and nobody really minds. 
+
+`cp Gateway/index.bak Gateway/index.html`
+
+Then type `exit` to disconnect and now just go to the IP address of your MRG in your browser and VOILA!! 
+
+
+
 # To Do:
 
 Look in to a system to better auto-increment the individual naming of inverter modules and sensors. Because each MRG can support 255 panels, so that YAML file would be a BEAST. 

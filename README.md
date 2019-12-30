@@ -84,6 +84,11 @@ Using my really unsighyly REST sensor and template, you can get real honest sens
 A very special shoutout to the Postman for providing the root password to these things!
 It's `nep` - Yet that's it, three characrters. 
 
+Probably the next thing to do is to enable FTP access - 
+edit /etc/initd.conf and remove the # from 
+`#ftp	stream	tcp	nowait	root	/usr/sbin/ftpd		/usr/sbin/ftpd`
+to enable FTP
+
 Upon root access, I've discovered that the interface is written in QT (or at least the Trolltech.conf file leads me to believe this to be the case) 
 
 uname -a yields `Linux Gateway 2.6.32.40-PlcGateway #84 PREEMPT Mon May 13 07:40:18 EDT 2013 armv4tl GNU/Linux`

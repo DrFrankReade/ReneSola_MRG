@@ -80,6 +80,27 @@ As for these moduleX.dat files, I can’t really say. It’s linux time, followe
 
 Using my really unsighyly REST sensor and template, you can get real honest sensor readings in to Homeassistant. Even ask my mom! 
 
+# Root access to the Renesola MRG!
+A very special shoutout to the Postman for providing the root password to these things!
+It's `nep` - Yet that's it, three characrters. 
+
+Upon root access, I've discovered that the interface is written in QT (or at least the Trolltech.conf file leads me to believe this to be the case) 
+
+uname -a yields `Linux Gateway 2.6.32.40-PlcGateway #84 PREEMPT Mon May 13 07:40:18 EDT 2013 armv4tl GNU/Linux`
+
+cat /proc/version gives `Linux version 2.6.32.40-PlcGateway (root@localhost.localdomain) (gcc version 4.4.3 (ctng-1.6.1) ) #84 PREEMPT Mon May 13 07:40:18 EDT 2013`
+
+Everythign is stored in flash memory, so no dev/sda but dev/mtd and set up as follows:
+```[root@Gateway /proc]# cat mtd 
+dev:    size   erasesize  name
+mtd0: 00060000 00020000 "uboot"
+mtd1: 00020000 00020000 "param"
+mtd2: 00500000 00020000 "Kernel"
+mtd3: 0fa80000 00020000 "root"
+mtd4: 10000000 00020000 "nand"
+```
+I've imaged all of these partitions, and I'm trying to copy everything out before I really start digging. The last thing I want to do is break this thing. 
+
 # To Do:
 
 Look in to a system to better auto-increment the individual naming of inverter modules and sensors. Because each MRG can support 255 panels, so that YAML file would be a BEAST. 

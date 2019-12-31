@@ -1,5 +1,6 @@
 # ReneSola_MRG
 Access the ReneSola MRG device to monitor ReneSola Micro Replus Inverters in detail, which is important. 
+Note that the original manufacturer of this device and all this stuff is probavly NEP - Or Northern Electroic & Power
 
 ![the actual gateway](MicroReplusMRG.jpg)
 
@@ -119,6 +120,13 @@ Your goal here, now, is to rename a file in the Gateway folder called `index.bak
 
 Then type `exit` to disconnect and now just go to the IP address of your MRG in your browser and VOILA!! 
 
+![OH MY GOD IT WORKS](inverter_webui.png)
+
+There's also a URL called (obviously replace 192.168.1.28 with your MRG's address)
+
+http://10.44.63.28/misetup/ where you can set up all your inverter parameters, but PASSWORD IS UNKNOWN!
+
+http://192.168.1.28/wifi/ where you can...set up a wifi card that doesn't exist, but maybe you can stick in the USB? Why?
 
 
 # To Do:

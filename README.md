@@ -2,6 +2,8 @@
 Access the ReneSola MRG device to monitor ReneSola Micro Replus Inverters in detail, which is important. 
 Note that the original manufacturer of this device and all this stuff is probavly NEP - Or Northern Electroic & Power
 
+Updated 2025 December for new templating standards in this HA release
+
 ![the actual gateway](MicroReplusMRG.jpg)
 
 The company ReneSola is pretty much out of bussiness. See their NYSE:SOL listing if you need proof, but there's a lot of hardware out there, and a lot of new-in-box hardware available on the liquidation market. Utsilizing this hardware keeps it out of a landfill and puts more solar on the grid and keeps a lump of coal somewhere from being burned. This is important. 
